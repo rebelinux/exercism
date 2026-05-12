@@ -1,0 +1,60 @@
+#include "robot_simulator.h"
+#include "string.h"
+
+robot_status_t robot_create(robot_direction_t direction, int x, int y) {
+    robot_position_t rp = {
+        .x = x,
+        .y = y
+    };
+    robot_status_t rs = {
+        .direction = direction,
+        .position = rp
+    };
+    return rs;
+}
+
+void robot_move(robot_status_t *robot, const char *commands) {
+    int l = strlen(commands);
+    for (int i = 0; i < l; i++) {
+        switch (commands[i])
+        {
+            case 'R':
+                if (robot->direction == DIRECTION_NORTH) {
+                    robot->direction = DIRECTION_EAST;
+                } else if (robot->direction == DIRECTION_SOUTH) {
+                    robot->direction = DIRECTION_WEST;
+                } else if (robot->direction == DIRECTION_WEST) {
+                    robot->direction = DIRECTION_NORTH;
+                } else if (robot->direction == DIRECTION_EAST) {
+                    robot->direction = DIRECTION_SOUTH;
+                }
+                break;
+            case 'L':
+                if (robot->direction == DIRECTION_NORTH) {
+                    robot->direction = DIRECTION_WEST;
+                } else if (robot->direction == DIRECTION_SOUTH) {
+                    robot->direction = DIRECTION_EAST;
+                } else if (robot->direction == DIRECTION_WEST) {
+                    robot->direction = DIRECTION_SOUTH;
+                } else if (robot->direction == DIRECTION_EAST) {
+                    robot->direction = DIRECTION_NORTH;
+                }
+                break;
+            case 'A':
+                if (robot->direction == DIRECTION_NORTH) {
+                    robot->position.y += 1;
+                } else if (robot->direction == DIRECTION_SOUTH) {
+                    robot->position.y -= 1;
+                } else if (robot->direction == DIRECTION_EAST) {
+                    robot->position.x += 1;
+                } else if (robot->direction == DIRECTION_WEST) {
+                    robot->position.x -= 1;
+                }
+                break;
+        
+            default:
+                break;
+        }
+    }
+    robot_create(robot->direction, robot->position.x, robot->position.y);
+}
